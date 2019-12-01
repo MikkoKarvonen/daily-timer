@@ -100,7 +100,7 @@ function App() {
               className="card-footer-item"
               onClick={() => {
               setDaily(!daily)
-              setSingleTime(/*10 * 60 / */ 1 * people)
+              setSingleTime(10 * 60 /  people)
               }}>
                 Start
             </a>
