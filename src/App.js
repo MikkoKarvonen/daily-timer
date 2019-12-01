@@ -5,20 +5,22 @@ import Countdown, {zeroPad} from 'react-countdown-now';
 function App() {
   const [people, setPeople] = useState(5);
   const [daily, setDaily] = useState(false);
+  const [singleTime, setSingleTime] = useState(false);
 
   const Completionist = () => <h1>Daily is over.</h1>;
-  let loopz = 0;
+  let loops = null;
 
   const renderer = ({ minutes, seconds, completed }) => {
-    if (loopz === 0) loopz = people;
+    if (loops === null) loops = 1;
     if (completed) {
-      loopz--;
-      if (loopz === 0) {
+      loops++;
+      if (loops > people) {
+        loops = null;
         return <Completionist/>
       }
       return (
         <Countdown 
-          date={Date.now() + /*10 * 60 **/ 3 * 1000} 
+          date={Date.now() + singleTime * 1000} 
           renderer = {renderer}
           >
         </Countdown>
@@ -27,6 +29,7 @@ function App() {
       return (
         <div>
           <h1>Daily is running</h1>
+          <p>Currently: {loops} / {people}</p>
           <span>{zeroPad(minutes, 2)}:{zeroPad(seconds, 2)}</span>
         </div>
       );
@@ -38,12 +41,15 @@ function App() {
       {daily ?
         <div>
           <Countdown 
-            date={Date.now() + /*10 * 60 **/ 3 * 1000} 
+            date={Date.now() + singleTime * 1000} 
             renderer = {renderer}
              >
             <Completionist/>
           </Countdown>
-          <button onClick={() => setDaily(!daily)}>Poistu</button>
+          <button onClick={() => {
+            setDaily(!daily)
+            loops = null;
+            }}>Poistu</button>
         </div>
       :
         <div>
@@ -57,7 +63,10 @@ function App() {
               if (people < 10) setPeople(people + 1)
             }}>-</button>
           </div>
-          <button onClick={() => setDaily(!daily)}>Start</button>
+          <button onClick={() => {
+            setDaily(!daily)
+            setSingleTime(/*10 * 60 / */ 1 * people)
+            }}>Start</button>
         </div>
       }
     </div>
