@@ -7,10 +7,22 @@ function App() {
   const [daily, setDaily] = useState(false);
 
   const Completionist = () => <h1>Daily is over.</h1>;
+  let loopz = 0;
 
   const renderer = ({ minutes, seconds, completed }) => {
+    if (loopz === 0) loopz = people;
     if (completed) {
-      return <Completionist />;
+      loopz--;
+      if (loopz === 0) {
+        return <Completionist/>
+      }
+      return (
+        <Countdown 
+          date={Date.now() + /*10 * 60 **/ 3 * 1000} 
+          renderer = {renderer}
+          >
+        </Countdown>
+      )
     } else {
       return (
         <div>
@@ -31,12 +43,12 @@ function App() {
              >
             <Completionist/>
           </Countdown>
-          <button onClick={() => setDaily(!daily)}>Stop</button>
+          <button onClick={() => setDaily(!daily)}>Poistu</button>
         </div>
       :
         <div>
           <h1>Daily Timer</h1>
-          <div class="controls">
+          <div className="controls">
             <button onClick={() => {
               if (people > 3) setPeople(people - 1)
             }}>-</button>
