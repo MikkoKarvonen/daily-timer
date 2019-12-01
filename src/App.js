@@ -1,13 +1,23 @@
 import React, {useState} from 'react';
-import './App.css';
 import Countdown, {zeroPad} from 'react-countdown-now';
+import 'bulma/css/bulma.css'
+import './App.css'
 
 function App() {
   const [people, setPeople] = useState(5);
   const [daily, setDaily] = useState(false);
   const [singleTime, setSingleTime] = useState(false);
 
-  const Completionist = () => <h1>Daily is over.</h1>;
+  const Completionist = () => (
+    <span>
+      <header className="card-header">
+        <p className="card-header-title">Daily is over.</p>
+      </header>
+      <div className="card-content content-card">
+        <p className="has-text-weight-light">...or atleast it should be.</p>
+      </div>
+    </span>
+  );
   let loops = null;
 
   const renderer = ({ minutes, seconds, completed }) => {
@@ -28,9 +38,15 @@ function App() {
     } else {
       return (
         <div>
-          <h1>Daily is running</h1>
-          <p>Currently: {loops} / {people}</p>
-          <span>{zeroPad(minutes, 2)}:{zeroPad(seconds, 2)}</span>
+          <header className="card-header">
+            <p className="card-header-title">Daily is running</p>
+          </header>
+          <div className="card-content content-card">
+            <div className="time">
+              <p>Currently: <span className="has-text-weight-semibold">{loops}</span> / {people}</p>
+              <span className="is-size-3 is-family-monospace">{zeroPad(minutes, 2)}:{zeroPad(seconds, 2)}</span>
+            </div>
+          </div>
         </div>
       );
     }
@@ -39,34 +55,56 @@ function App() {
   return (
     <div className="App">
       {daily ?
-        <div>
+        <div className="card">
           <Countdown 
             date={Date.now() + singleTime * 1000} 
             renderer = {renderer}
              >
             <Completionist/>
           </Countdown>
-          <button onClick={() => {
-            setDaily(!daily)
-            loops = null;
-            }}>Poistu</button>
+          <footer className="card-footer">
+            <a 
+              href="#"
+              className="card-footer-item"
+              onClick={() => {
+              setDaily(!daily)
+              loops = null;
+              }}>Exit</a>
+          </footer>
         </div>
       :
-        <div>
-          <h1>Daily Timer</h1>
-          <div className="controls">
-            <button onClick={() => {
-              if (people > 3) setPeople(people - 1)
-            }}>-</button>
-            {people}
-            <button onClick={() => {
-              if (people < 10) setPeople(people + 1)
-            }}>-</button>
+        <div className="card">
+          <header className="card-header">
+            <p className="card-header-title">Daily Timer</p>
+          </header>
+          <div className="card-content content-card">
+            <button 
+              className="button is-primary"
+              onClick={() => {
+                if (people > 3) setPeople(people - 1)
+              }}>
+                -
+            </button>
+            <p className="title people-title is-family-monospace">{people}</p>
+            <button 
+              className="button is-primary"
+              onClick={() => {
+                if (people < 10) setPeople(people + 1)
+              }}>
+                +
+              </button>
           </div>
-          <button onClick={() => {
-            setDaily(!daily)
-            setSingleTime(/*10 * 60 / */ 1 * people)
-            }}>Start</button>
+          <footer className="card-footer">
+            <a 
+              href="#"
+              className="card-footer-item"
+              onClick={() => {
+              setDaily(!daily)
+              setSingleTime(/*10 * 60 / */ 1 * people)
+              }}>
+                Start
+            </a>
+          </footer>
         </div>
       }
     </div>
