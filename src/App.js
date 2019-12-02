@@ -2,6 +2,12 @@ import React, {useState} from 'react';
 import Countdown, {zeroPad} from 'react-countdown-now';
 import 'bulma/css/bulma.css'
 import './App.css'
+import UIfx from 'uifx';
+import sound from './sound.mp3';
+import endSound from './end.mp3';
+
+const middle = new UIfx(sound, {volume: 1.0})
+const end = new UIfx(endSound, {volume: 1.0})
 
 function App() {
   const [people, setPeople] = useState(5);
@@ -26,8 +32,10 @@ function App() {
       loops++;
       if (loops > people) {
         loops = null;
+        end.play()
         return <Completionist/>
       }
+      middle.play()
       return (
         <Countdown 
           date={Date.now() + singleTime * 1000} 
@@ -100,7 +108,7 @@ function App() {
               className="card-footer-item"
               onClick={() => {
               setDaily(!daily)
-              setSingleTime(10 * 60 /  people)
+              setSingleTime(10 * 60 / people)
               }}>
                 Start
             </a>
